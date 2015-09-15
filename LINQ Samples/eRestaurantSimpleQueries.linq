@@ -33,3 +33,15 @@ Waiters
 var results = from item in Waiters
 				select item;
 results.Dump();
+
+//once the query is created, tested, you will be able to 
+//transfer the query with minor modifications into your 
+//BLL methods
+//public List<pocoObeject> SomeBllMethodName()
+//{
+	//content to your DAL object : var contextvariable
+	//do your query
+//	var results = from item in contextvariable.Waiters
+//				select item;
+//	return result.ToList();
+//}
