@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace eRestaurantSystem.DAL.POCOs
 {
-    class ReservationDetail
+    public class ReservationDetail
     {
         //NOTE: NO validation in these POCO classes
         public string CustomerName { get; set; }
