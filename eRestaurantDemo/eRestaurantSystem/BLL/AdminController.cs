@@ -43,7 +43,7 @@ namespace eRestaurantSystem.BLL
             {
           
                 //query syntax 
-                var results = from item in context.Reservations
+                var results = from item in context.Reservations 
                               where item.EventCode.Equals(eventcode)
                               orderby item.CustomerName, item.ReservationDate
                               select item; 
@@ -77,8 +77,35 @@ namespace eRestaurantSystem.BLL
                                                      ReservationDate = row.ReservationDate,
                                                      NumberInParty = row.NumberInParty,
                                                      ContactPhone = row.ContactPhone,
-                                                     ReservationStatus = row.ReservationStatus
+                                                     ReservationStatus = row.ReservationStatus.ToString()
                                                  }
+                              };
+                return results.ToList();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<CategoryMenuItems> CategoryMenuItems_List()
+        {
+            using (var context = new eRestaurantContext())
+            {
+       
+
+                //query status
+                var results = from category in context.MenuCategories
+                              orderby category.Description
+                              select new CategoryMenuItems() //DTO
+                              {
+                                  Description = category.Description,
+                                  MenuItems = from row in category.MenuItems//Collection of navigated rows of ICollection in SpecialEvents entity
+                                              select new MenuItem()
+                                              {
+                                                  Description = row.Description,
+                                                  Price = row.CurrentPrice,
+                                                  Calories = row.Calories,
+                                                  Comment = row.Comment
+                                              }
+
                               };
                 return results.ToList();
             }
