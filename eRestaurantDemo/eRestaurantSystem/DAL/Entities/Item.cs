@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 #region Additional Namespaces
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 #endregion
+
 
 namespace eRestaurantSystem.DAL.Entities
 {
@@ -32,7 +34,7 @@ namespace eRestaurantSystem.DAL.Entities
         public int MenuCategoryID { get; set; }
 
         public virtual MenuCategory Category { get; set; }
-        public virtual ICollection<BillItem> BillItems { get; set; }
+        public virtual ICollection<BillItem> Billitems { get; set; }
 
         public Item()
         {

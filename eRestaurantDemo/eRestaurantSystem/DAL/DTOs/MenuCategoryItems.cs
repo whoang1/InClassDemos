@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using System.Collections;
 
 namespace eRestaurantSystem.DAL.DTOs
 {
-    public class CategoryMenuItems
+    public class MenuCategoryItems
     {
         public string Description { get; set; }
         public IEnumerable MenuItems { get; set; }

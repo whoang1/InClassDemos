@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 #region Additional Namespaces
-using System.Collections; //required by IEnumerable
 #endregion
 
 namespace eRestaurantSystem.DAL.POCOs

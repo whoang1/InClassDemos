@@ -46,14 +46,15 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/">William Hoang</a>
+                    <a class="navbar-brand" runat="server" href="~/">Don Welch</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
-                        <li><a runat="server" href="~/SamplePages/SpecialEventsAdmin.aspx">SpecialEvents</a></li>
-                        <li><a runat="server" href="~/SamplePages/ListView.aspx">ListView Display</a></li>
-                        <li><a runat="server" href="~/SamplePages/ReservationsByDate.aspx">Reservation by Date</a></li>
+                        <li><a runat="server" href="~/SamplePages/SpecialEventsAdmin">SpecialEvents</a></li>
+                        <li><a runat="server" href="~/SamplePages/Listview">Listview Display</a></li>
+                        <li><a runat="server" href="~/SamplePages/ReservationsByDate">Repeater Display</a></li>
+                        <li><a runat="server" href="~/SamplePages/CategoryMenuItems">Repeater2 Display</a></li>
                         <li><a runat="server" href="~/About">About</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>

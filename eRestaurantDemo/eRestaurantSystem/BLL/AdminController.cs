@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#region Additional NameSpaces
-using eRestaurantSystem.DAL.Entities;
+#region Additional Namespaces
 using eRestaurantSystem.DAL;
-using System.ComponentModel;
+using eRestaurantSystem.DAL.Entities;
 using eRestaurantSystem.DAL.DTOs;
-using eRestaurantSystem.DAL.POCOs; //Used for ODS access
+using eRestaurantSystem.DAL.POCOs;
+using System.ComponentModel; //Object Data Source
+
 #endregion
+
 namespace eRestaurantSystem.BLL
 {
     [DataObject]
@@ -19,16 +21,15 @@ namespace eRestaurantSystem.BLL
         [DataObjectMethod(DataObjectMethodType.Select,false)]
         public List<SpecialEvent> SpecialEvents_List()
         {
+            //connect to our DbContext class in the DAL
+            //create an instance of the class
+            //we will use a transaction to hold our query
             using (var context = new eRestaurantContext())
             {
-                //Retrieve the data from the SpecialEvents table
-                //to do so we will use the DbSet in eRestaurantContext
-                //      call SpecialEvents (done by mapping)
-            
                 //method syntax
                 //return context.SpecialEvents.OrderBy(x => x.Description).ToList();
 
-                //query syntax 
+                //query syntax
                 var results = from item in context.SpecialEvents
                               orderby item.Description
                               select item;
@@ -41,74 +42,79 @@ namespace eRestaurantSystem.BLL
         {
             using (var context = new eRestaurantContext())
             {
-          
-                //query syntax 
-                var results = from item in context.Reservations 
+                //query syntax
+                var results = from item in context.Reservations
                               where item.EventCode.Equals(eventcode)
                               orderby item.CustomerName, item.ReservationDate
-                              select item; 
+                              select item;
                 return results.ToList();
+
+
+
             }
         }
-        
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<ReservationByDate> GetReservationByDate(string reservationdate)
+
+    [DataObjectMethod(DataObjectMethodType.Select,false)]
+        public List<ReservationsByDate> GetReservationsByDate(string reservationdate)
         {
             using (var context = new eRestaurantContext())
             {
-                //remember Linq does not like using DateTime casting
+                //Linq is not very playful or cooperative with
+                //DateTime
+
+                //extract the year, month and day ourselves out
+                //of the passed parameter value
                 int theYear = (DateTime.Parse(reservationdate)).Year;
                 int theMonth = (DateTime.Parse(reservationdate)).Month;
                 int theDay = (DateTime.Parse(reservationdate)).Day;
 
-                //query status
-                var results = from item in context.SpecialEvents
-                              orderby item.Description
-                              select new ReservationByDate() //DTO
+                var results = from eventitem in context.SpecialEvents
+                              orderby eventitem.Description
+                              select new ReservationsByDate() //a new instance for each specialevent row on the table
                               {
-                                  Description = item.Description,
-                                  Reservations = from row in item.Reservations //Collection of navigated rows of ICollection in SpecialEvents entity
-                                                 where row.ReservationDate.Year == theYear 
-                                                 && row.ReservationDate.Month == theMonth
-                                                 && row.ReservationDate.Day == theDay
-                                                 select new ReservationDetail() //POCO
+                                  Description = eventitem.Description,
+                                  Reservations = from row in eventitem.Reservations
+                                                 where row.ReservationDate.Year == theYear
+                                                   && row.ReservationDate.Month == theMonth
+                                                   && row.ReservationDate.Day == theDay
+                                                 select new ReservationDetail() // a new for each reservation of a particular specialevent code
                                                  {
                                                      CustomerName = row.CustomerName,
                                                      ReservationDate = row.ReservationDate,
                                                      NumberInParty = row.NumberInParty,
                                                      ContactPhone = row.ContactPhone,
-                                                     ReservationStatus = row.ReservationStatus.ToString()
+                                                     ReservationStatus = row.ReservationStatus
                                                  }
+
                               };
                 return results.ToList();
             }
         }
 
         [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<CategoryMenuItems> CategoryMenuItems_List()
+        public List<MenuCategoryItems> MenuCategoryItems_List()
         {
             using (var context = new eRestaurantContext())
             {
-       
-
-                //query status
-                var results = from category in context.MenuCategories
-                              orderby category.Description
-                              select new CategoryMenuItems() //DTO
+                var results = from menuitem in context.MenuCategories
+                              orderby menuitem.Description
+                              select new MenuCategoryItems() 
                               {
-                                  Description = category.Description,
-                                  MenuItems = from row in category.MenuItems//Collection of navigated rows of ICollection in SpecialEvents entity
-                                              select new MenuItem()
-                                              {
-                                                  Description = row.Description,
-                                                  Price = row.CurrentPrice,
-                                                  Calories = row.Calories,
-                                                  Comment = row.Comment
-                                              }
-
+                                  Description = menuitem.Description,
+                                  MenuItems = from row in menuitem.MenuItems
+                                              select new MenuItem() 
+                                                 {
+                                                     Description = row.Description,
+                                                     Price = row.CurrentPrice,
+                                                     Calories = row.Calories,
+                                                     Comment = row.Comment
+                                                 }
                               };
                 return results.ToList();
             }
         }
+      
+
     }
 }
+
