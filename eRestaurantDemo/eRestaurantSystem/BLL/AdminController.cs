@@ -18,6 +18,7 @@ namespace eRestaurantSystem.BLL
     [DataObject]
     public class AdminController
     {
+        #region Query Samples
         [DataObjectMethod(DataObjectMethodType.Select,false)]
         public List<SpecialEvent> SpecialEvents_List()
         {
@@ -113,8 +114,59 @@ namespace eRestaurantSystem.BLL
                 return results.ToList();
             }
         }
-      
 
+        #endregion
+
+        #region CRUD Insert, Update, Delete
+        [DataObjectMethod(DataObjectMethodType.Insert,false)]
+        public void SpecialEvents_Add(SpecialEvent item)
+        {
+            //input into this method is at the instance level
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                //create a pointer to variable for the instance type
+                //set this pointer to null
+                SpecialEvent added = null;
+
+                //set up the add request for the dbcontext
+                added = context.SpecialEvents.Add(item);
+
+                //saving the changes will cuase the .Add to execute
+                //commits the add to the database
+                //evaluates the annotations (validation) on your entity
+                context.SaveChanges();
+
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Update,false)]
+        public void SpecialEvents_Update(SpecialEvent item)
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                context.Entry<SpecialEvent>(context.SpecialEvents.Attach(item)).State = System.Data.Entity.EntityState.Modified;
+
+                context.SaveChanges();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Delete,false)]
+        public void SpecialEvents_Delete(SpecialEvent item)
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                // look the item instance on the database to determine if 
+                // the instance exists
+                //On the delete ensure you reference the pkey field name
+                SpecialEvent existing = context.SpecialEvents.Find(item.EventCode);
+                
+                //set up the date request command
+                context.SpecialEvents.Remove(existing);
+                context.SaveChanges();
+            }
+        }
+
+        #endregion
     }
 }
 
