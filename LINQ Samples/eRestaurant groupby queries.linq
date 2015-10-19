@@ -1,16 +1,19 @@
 <Query Kind="Expression">
   <Connection>
-    <ID>30204253-2820-45e3-8e89-44e0ae0df87d</ID>
+    <ID>1f6a4b30-57f4-4825-8a8c-b4e5c6c67b27</ID>
     <Persist>true</Persist>
     <Server>.</Server>
     <Database>eRestaurant</Database>
   </Connection>
 </Query>
 
-//grouping
+//groupby
+
 from food in Items
 group food by food.MenuCategory.Description
 
-//requires the creation of a an anonymous type
+//this creates a key with a value and the row collection for that key value
+
+//more than one field
 from food in Items
 group food by new {food.MenuCategory.Description, food.CurrentPrice}

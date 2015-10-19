@@ -5,47 +5,110 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-#region additional Namespace
-using eRestaurantSystem.BLL; //controller
-using eRestaurantSystem.DAL.Entities; //entity
-using EatIn.UI;
+#region Additional Namespaces
+using eRestaurantSystem.BLL;   //controller
+using eRestaurantSystem.DAL.Entities;  //entity
+using EatIn.UI;  //delegate ProcessRequest
 #endregion
+
 public partial class CommandPages_WaiterAdmin : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        DateHired.Text = DateTime.Today.ToShortDateString();
+
     }
+
+    protected void CheckForException(object sender, ObjectDataSourceStatusEventArgs e)
+    {
+        MessageUserControl.HandleDataBoundException(e);
+    }
+
     protected void FetchWaiter_Click(object sender, EventArgs e)
     {
+        //to properly interface with our MessageUserControl
+        //we will delegate the execution of this Click event
+        //under the MessageUserControl
         if (WaiterList.SelectedIndex == 0)
         {
-            MessageUserControl.ShowInfo("Please select a waiter before clicking Fetch Waiter");
+            //issue our own error message
+            MessageUserControl.ShowInfo("Please select a waiter to process.");
         }
         else
         {
-            //We will use a tryrun() from the MessageUserControl
-            //this will capture error messges when/if they happne 
-            //and properly display in the user control.
-            //GetWaiterInfor is you rmethod for accessing BLL and query
+            //execute the necessary standard lookup code under the
+            //control of the MessageUserControl
             MessageUserControl.TryRun((ProcessRequest)GetWaiterInfo);
         }
     }
+
     public void GetWaiterInfo()
     {
-        //a standard lookup sequence
+        //a standard lookup process
         AdminController sysmgr = new AdminController();
-
         var waiter = sysmgr.GetWaiterByID(int.Parse(WaiterList.SelectedValue));
         WaiterID.Text = waiter.WaiterID.ToString();
         FirstName.Text = waiter.FirstName;
         LastName.Text = waiter.LastName;
-        Phone.Text = waiter.Phone;
         Address.Text = waiter.Address;
-        DateHired.Text = waiter.HireDate.ToShortDateString();
-        if(waiter.ReleaseDate.HasValue)
+        Phone.Text = waiter.Phone;
+        HireDate.Text = waiter.HireDate.ToShortDateString();
+        //null field check
+        if (waiter.ReleaseDate.HasValue)
         {
-            DateReleased.Text = waiter.ReleaseDate.ToShortDateString();
+            ReleaseDate.Text = waiter.ReleaseDate.ToString();
+        }
+        else
+        {
+            ReleaseDate.Text = "";
+        }
+    }
+    protected void WaiterInsert_Click(object sender, EventArgs e)
+    {
+        //this example is using the TryRun inline
+        MessageUserControl.TryRun(() =>
+        {
+            Waiter item = new Waiter();
+            item.FirstName = FirstName.Text;
+            item.LastName = LastName.Text;
+            item.Address = Address.Text;
+            item.Phone = Phone.Text;
+            item.HireDate = DateTime.Parse(HireDate.Text);
+            item.ReleaseDate = null;
+            AdminController sysmgr = new AdminController();
+            WaiterID.Text = sysmgr.Waiter_Add(item).ToString();
+            MessageUserControl.ShowInfo("Waiter added.");
+        }
+        );
+    }
+    protected void WaiterUpdate_Click(object sender, EventArgs e)
+    {
+        if(string.IsNullOrEmpty(WaiterID.Text))
+        {
+            MessageUserControl.ShowInfo("Please select a waiter");
+        }
+        else
+        {
+            MessageUserControl.TryRun(() =>
+            {
+                Waiter item = new Waiter();
+                item.FirstName = FirstName.Text;
+                item.LastName = LastName.Text;
+                item.Address = Address.Text;
+                item.Phone = Phone.Text;
+                item.HireDate = DateTime.Parse(HireDate.Text);
+                if (string.IsNullOrEmpty(ReleaseDate.Text))
+                {
+                    item.ReleaseDate = null;
+                }
+                else
+                {
+                    item.ReleaseDate = DateTime.Parse(ReleaseDate.Text);
+                }
+                AdminController sysmgr = new AdminController();
+                sysmgr.Waiter_Add(item);
+                MessageUserControl.ShowInfo("Waiter added.");
+            }
+            );
         }
     }
 }

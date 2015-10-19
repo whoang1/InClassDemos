@@ -18,7 +18,9 @@ namespace eRestaurantSystem.BLL
     [DataObject]
     public class AdminController
     {
-        #region Query Samples
+
+        #region Queries
+
         [DataObjectMethod(DataObjectMethodType.Select,false)]
         public List<SpecialEvent> SpecialEvents_List()
         {
@@ -35,6 +37,30 @@ namespace eRestaurantSystem.BLL
                               orderby item.Description
                               select item;
                 return results.ToList();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<Waiter> Waiters_List()
+        {
+            using (var context = new eRestaurantContext())
+            {
+                var results = from item in context.Waiters
+                              orderby item.LastName, item.FirstName
+                              select item;
+                return results.ToList();  //none, 1 or more rows
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public Waiter GetWaiterByID(int waiterid)
+        {
+            using (var context = new eRestaurantContext())
+            {
+                var results = from item in context.Waiters
+                              where item.WaiterID == waiterid
+                              select item;
+                return results.FirstOrDefault();  //one row at most
             }
         }
 
@@ -115,148 +141,101 @@ namespace eRestaurantSystem.BLL
             }
         }
 
+      
+
         #endregion
 
-        #region CRUD Insert, Update, Delete
+        #region Add, Update, Delete of CRUD for CQRS
         [DataObjectMethod(DataObjectMethodType.Insert,false)]
         public void SpecialEvents_Add(SpecialEvent item)
         {
-            //input into this method is at the instance level
             using (eRestaurantContext context = new eRestaurantContext())
             {
-                //create a pointer to variable for the instance type
-                //set this pointer to null
+                //these methods are execute using an instance level item
+                //set up a instance pointer and initialize to null
                 SpecialEvent added = null;
-
-                //set up the add request for the dbcontext
+                //setup the command to execute the add
                 added = context.SpecialEvents.Add(item);
-
-                //saving the changes will cuase the .Add to execute
-                //commits the add to the database
-                //evaluates the annotations (validation) on your entity
+                //command is not executed until it is actually saved.
                 context.SaveChanges();
-
             }
         }
-
-        [DataObjectMethod(DataObjectMethodType.Update,false)]
+         [DataObjectMethod(DataObjectMethodType.Update, false)]
         public void SpecialEvents_Update(SpecialEvent item)
         {
             using (eRestaurantContext context = new eRestaurantContext())
             {
-                context.Entry<SpecialEvent>(context.SpecialEvents.Attach(item)).State = System.Data.Entity.EntityState.Modified;
-
+                //indicate the updating item instance
+                //alter the Modified Status flag for this instanc
+                context.Entry<SpecialEvent>(context.SpecialEvents.Attach(item)).State =
+                    System.Data.Entity.EntityState.Modified;
+                //command is not executed until it is actually saved.
                 context.SaveChanges();
             }
         }
-
-        [DataObjectMethod(DataObjectMethodType.Delete,false)]
+         [DataObjectMethod(DataObjectMethodType.Delete, false)]
         public void SpecialEvents_Delete(SpecialEvent item)
         {
             using (eRestaurantContext context = new eRestaurantContext())
             {
-                // look the item instance on the database to determine if 
-                // the instance exists
-                //On the delete ensure you reference the pkey field name
-                SpecialEvent existing = context.SpecialEvents.Find(item.EventCode);
                 
-                //set up the date request command
+                //lookup the instance and record if found (set pointer to instance)
+                SpecialEvent existing = context.SpecialEvents.Find(item.EventCode);
+
+                //setup the command to execute the delete
                 context.SpecialEvents.Remove(existing);
+                //command is not executed until it is actually saved.
                 context.SaveChanges();
             }
         }
 
+         [DataObjectMethod(DataObjectMethodType.Insert, false)]
+         public int Waiter_Add(Waiter item)
+         {
+             using (eRestaurantContext context = new eRestaurantContext())
+             {
+                 //these methods are execute using an instance level item
+                 //set up a instance pointer and initialize to null
+                 Waiter added = null;
+                 //setup the command to execute the add
+                 added = context.Waiters.Add(item);
+                 //command is not executed until it is actually saved.
+                 context.SaveChanges();
+                 //added contains the date of the newly added waiter
+                 //including the pkey value.
+                 return added.WaiterID;
+             }
+         }
+         [DataObjectMethod(DataObjectMethodType.Update, false)]
+         public void Waiters_Update(Waiter item)
+         {
+             using (eRestaurantContext context = new eRestaurantContext())
+             {
+                 //indicate the updating item instance
+                 //alter the Modified Status flag for this instanc
+                 context.Entry<Waiter>(context.Waiters.Attach(item)).State =
+                     System.Data.Entity.EntityState.Modified;
+                 //command is not executed until it is actually saved.
+                 context.SaveChanges();
+             }
+         }
+         [DataObjectMethod(DataObjectMethodType.Delete, false)]
+         public void Waiters_Delete(Waiter item)
+         {
+             using (eRestaurantContext context = new eRestaurantContext())
+             {
+
+                 //lookup the instance and record if found (set pointer to instance)
+                 Waiter existing = context.Waiters.Find(item.WaiterID);
+
+                 //setup the command to execute the delete
+                 context.Waiters.Remove(existing);
+                 //command is not executed until it is actually saved.
+                 context.SaveChanges();
+             }
+         }
         #endregion
+    }//eof class
+}//eof namespace
 
-        //Waiter CRUD
-        #region CRUD Insert, Update, Delete, Select
-        [DataObjectMethod(DataObjectMethodType.Insert, false)]
-        public void Waiters_Add(Waiter item)
-        {
-            //input into this method is at the instance level
-            using (eRestaurantContext context = new eRestaurantContext())
-            {
-                //create a pointer to variable for the instance type
-                //set this pointer to null
-                Waiter added = null;
-
-                //set up the add request for the dbcontext
-                added = context.Waiters.Add(item);
-
-                //saving the changes will cuase the .Add to execute
-                //commits the add to the database
-                //evaluates the annotations (validation) on your entity
-                context.SaveChanges();
-
-            }
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Update, false)]
-        public void Waitesr_Update(Waiter item)
-        {
-            using (eRestaurantContext context = new eRestaurantContext())
-            {
-                context.Entry<Waiter>(context.Waiters.Attach(item)).State = System.Data.Entity.EntityState.Modified;
-
-                context.SaveChanges();
-            }
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Delete, false)]
-        public void Waiters_Delete(Waiter item)
-        {
-            using (eRestaurantContext context = new eRestaurantContext())
-            {
-                // look the item instance on the database to determine if 
-                // the instance exists
-                //On the delete ensure you reference the pkey field name
-                Waiter existing = context.Waiters.Find(item.WaiterID);
-
-                //set up the date request command
-                context.Waiters.Remove(existing);
-                context.SaveChanges();
-            }
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<Waiter> Waiters_List()
-        {
-            //connect to our DbContext class in the DAL
-            //create an instance of the class
-            //we will use a transaction to hold our query
-            using (var context = new eRestaurantContext())
-            {
-                //method syntax
-                //return context.SpecialEvents.OrderBy(x => x.Description).ToList();
-
-                //query syntax
-                var results = from item in context.Waiters
-                              orderby item.LastName
-                              select item;
-                return results.ToList();
-            }
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public Waiter GetWaiterByID(int waiterid)
-        {
-            //connect to our DbContext class in the DAL
-            //create an instance of the class
-            //we will use a transaction to hold our query
-            using (var context = new eRestaurantContext())
-            {
-                //method syntax
-                //return context.SpecialEvents.OrderBy(x => x.Description).ToList();
-
-                //query syntax
-                var results = from item in context.Waiters
-                              where item.WaiterID == waiterid
-                              select item;
-                return results.FirstOrDefault();
-            }
-        }
-       
-        #endregion
-    }
-}
 

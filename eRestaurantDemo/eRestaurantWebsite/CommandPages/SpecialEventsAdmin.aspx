@@ -1,12 +1,16 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="SpecialEventsAdmin.aspx.cs" Inherits="CommandPages_SpecialEventsAdmin" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" 
+    AutoEventWireup="true" CodeFile="SpecialEventsAdmin.aspx.cs" 
+    Inherits="CommandPages_SpecialEventsAdmin" %>
 
-<%@ Register src="../UserControl/MessageUserControl.ascx" tagname="MessageUserControl" tagprefix="uc1" %>
+<%@ Register Src="~/UserControls/MessageUserControl.ascx" 
+    TagPrefix="uc1" TagName="MessageUserControl" %>
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
-    <h1>Special Events CRUD using ListView</h1>
-    <uc1:MessageUserControl ID="MessageUserControl1" runat="server" />
-
-    <asp:ListView ID="SpecialEventsDisplay" runat="server" 
+    <br />  <br />  <br />  <br />  <br />
+<h1>SpecialEvents CRUD using ListView and ODS</h1>
+    <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
+    <asp:ListView ID="SpecialEventsCRUD" runat="server" 
         DataSourceID="ODSSpecialEvents" 
         InsertItemPosition="FirstItem" DataKeyNames="EventCode">
         <AlternatingItemTemplate>
@@ -24,7 +28,7 @@
                 <td>
                     <asp:CheckBox ID="ActiveCheckBox" runat="server" Checked='<%# Eval("Active") %>' Enabled="false" />
                 </td>
-              
+                
             </tr>
         </AlternatingItemTemplate>
         <EditItemTemplate>
@@ -85,7 +89,7 @@
                 <td>
                     <asp:CheckBox ID="ActiveCheckBox" runat="server" Checked='<%# Eval("Active") %>' Enabled="false" />
                 </td>
-               
+             
             </tr>
         </ItemTemplate>
         <LayoutTemplate>
@@ -98,7 +102,7 @@
                                 <th runat="server">EventCode</th>
                                 <th runat="server">Description</th>
                                 <th runat="server">Active</th>
-      
+                               
                             </tr>
                             <tr id="itemPlaceholder" runat="server">
                             </tr>
@@ -109,7 +113,9 @@
                     <td runat="server" style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF">
                         <asp:DataPager ID="DataPager1" runat="server">
                             <Fields>
-                                <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowLastPageButton="True" />
+                                <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                <asp:NumericPagerField />
+                                <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" ShowNextPageButton="False" ShowPreviousPageButton="False" />
                             </Fields>
                         </asp:DataPager>
                     </td>
@@ -131,21 +137,24 @@
                 <td>
                     <asp:CheckBox ID="ActiveCheckBox" runat="server" Checked='<%# Eval("Active") %>' Enabled="false" />
                 </td>
+              
             </tr>
         </SelectedItemTemplate>
+
     </asp:ListView>
     <asp:ObjectDataSource ID="ODSSpecialEvents" runat="server" 
         DataObjectTypeName="eRestaurantSystem.DAL.Entities.SpecialEvent" 
         DeleteMethod="SpecialEvents_Delete" 
-        InsertMethod="SpecialEvents_Add" 
-        SelectMethod="SpecialEvents_List" 
+        InsertMethod="SpecialEvents_Add"  
         UpdateMethod="SpecialEvents_Update"
+        SelectMethod="SpecialEvents_List"
         OldValuesParameterFormatString="original_{0}" 
         TypeName="eRestaurantSystem.BLL.AdminController" 
         OnDeleted="CheckForException" 
         OnInserted="CheckForException" 
         OnSelected="CheckForException" 
         OnUpdated="CheckForException">
+
     </asp:ObjectDataSource>
 </asp:Content>
 

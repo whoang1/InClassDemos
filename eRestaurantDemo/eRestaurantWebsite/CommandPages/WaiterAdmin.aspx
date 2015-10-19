@@ -1,92 +1,75 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="WaiterAdmin.aspx.cs" Inherits="CommandPages_WaiterAdmin" %>
 
-<%@ Register Src="../UserControl/MessageUserControl.ascx" TagName="MessageUserControl" TagPrefix="uc1" %>
-<%@ Register Src="~/UserControl/MessageUserControl.ascx" TagPrefix="uc2" TagName="MessageUserControl" %>
+<%@ Register Src="~/UserControls/MessageUserControl.ascx" TagPrefix="uc1" TagName="MessageUserControl" %>
 
 
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
-    <h1>Waiter Admin</h1>
-    <p></p>
-    <uc2:MessageUserControl runat="server" ID="MessageUserControl" />
-    <asp:Label ID="label1" runat="server" Text="Select Waiter for update">
-
-    </asp:Label><asp:DropDownList ID="WaiterList" runat="server" AppendDataBoundItems="True" DataSourceID="ObjectDataSource1" DataTextField="FullName" DataValueField="WaiterID">
-        <asp:ListItem>[Select Waiter]</asp:ListItem>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
+    <br /><br /><br />
+    <h1>Waiter Admin CRUD</h1>
+    <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
+    <br />
+    <asp:Label ID="Label1" runat="server" Text="Waiter Names"></asp:Label>
+    <asp:DropDownList ID="WaiterList" runat="server" AppendDataBoundItems="True" DataSourceID="ODSWaiterList" DataTextField="FullName" DataValueField="WaiterID" Height="22px" Width="371px">
+        <asp:ListItem Value="0">Select a waiter</asp:ListItem>
     </asp:DropDownList>
-    <asp:LinkButton ID="FetchWaiter" runat="server" OnClick="FetchWaiter_Click">Fench Waiter</asp:LinkButton>
+    <asp:LinkButton ID="FetchWaiter" runat="server" OnClick="FetchWaiter_Click">Fetch Waiter</asp:LinkButton>
+    <asp:ObjectDataSource ID="ODSWaiterList" runat="server" OldValuesParameterFormatString="original_{0}" OnSelected="CheckForException" SelectMethod="Waiters_List" TypeName="eRestaurantSystem.BLL.AdminController"></asp:ObjectDataSource>
     <br />
     <table align="center" style="width: 70%">
         <tr>
-            <td style="width: 375px">&nbsp;</td>
+            <td>ID</td>
             <td>
-                &nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td style="width: 375px">ID:</td>
-            <td>
-                <asp:Label ID="WaiterID" runat="server" Text=""></asp:Label>
+                <asp:Label ID="WaiterID" runat="server" ></asp:Label>
             </td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 375px; height: 24px">First Name:</td>
+            <td>First Name</td>
             <td>
                 <asp:TextBox ID="FirstName" runat="server"></asp:TextBox>
             </td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 375px">Last Name:</td>
-            <td style="height: 24px">
+            <td>Last Name</td>
+            <td>
                 <asp:TextBox ID="LastName" runat="server"></asp:TextBox>
             </td>
-            <td style="height: 24px"></td>
         </tr>
         <tr>
-            <td style="width: 375px">Phone:</td>
-            <td>
-                <asp:TextBox ID="Phone" runat="server"></asp:TextBox>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td style="width: 375px">Address:</td>
+            <td>Address</td>
             <td>
                 <asp:TextBox ID="Address" runat="server"></asp:TextBox>
             </td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 375px">Date Hired (mm/dd/yyyy)</td>
+            <td>Phone</td>
             <td>
-                <asp:TextBox ID="DateHired" runat="server"></asp:TextBox>
+                <asp:TextBox ID="Phone" runat="server"></asp:TextBox>
             </td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 375px">Date Released (mm/dd/yyy)</td>
+            <td>Hire Date</td>
             <td>
-                <asp:TextBox ID="DateReleased" runat="server"></asp:TextBox>
+                <asp:TextBox ID="HireDate" runat="server"></asp:TextBox>
             </td>
+        </tr>
+        <tr>
+            <td>Release Date</td>
+            <td>
+                <asp:TextBox ID="ReleaseDate" runat="server"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 375px; height: 22px"></td>
-            <td style="height: 22px"></td>
-            <td style="height: 22px"></td>
-        </tr>
-        <tr>
-            <td style="width: 375px">
-                <asp:LinkButton ID="InsertWaiter" runat="server">Insert</asp:LinkButton>
+            <td>
+                <asp:LinkButton ID="WaiterInsert" runat="server" OnClick="WaiterInsert_Click">Insert</asp:LinkButton>
             </td>
             <td>
-                <asp:LinkButton ID="UpdateWaiter" runat="server">Update</asp:LinkButton>
+                <asp:LinkButton ID="WaiterUpdate" runat="server" OnClick="WaiterUpdate_Click">Update</asp:LinkButton>
             </td>
-            <td>&nbsp;</td>
         </tr>
     </table>
-    <br />
-    <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" DataObjectTypeName="eRestaurantSystem.DAL.Entities.Waiter" DeleteMethod="Waiters_Delete" InsertMethod="Waiters_Add" OldValuesParameterFormatString="original_{0}" SelectMethod="Waiters_List" TypeName="eRestaurantSystem.BLL.AdminController" UpdateMethod="Waitesr_Update"></asp:ObjectDataSource>
 </asp:Content>
 
