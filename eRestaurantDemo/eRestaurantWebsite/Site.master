@@ -57,8 +57,8 @@
                         <li><a runat="server" href="~/SamplePages/CategoryMenuItems">Rpr CatMenuItems</a></li>
                         <li><a runat="server" href="~/CommandPages/SpecialEventsAdmin">LV CRUD</a></li>
                          <li><a runat="server" href="~/CommandPages/WaiterAdmin">Single Row CRUD</a></li>
-                        <li><a runat="server" href="~/About">About</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                        <li><a runat="server" href="~/Reports/MenuCategoryItemReport.aspx">Report</a></li>
+
                     </ul>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         
