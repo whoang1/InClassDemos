@@ -15,27 +15,35 @@ namespace eRestaurantSystem.DAL.Entities
     {
         [Key]
         public int TableID { get; set; }
-        [Required(ErrorMessage = "Table Number is required")]
-        [Range(1, 25, ErrorMessage = "Table Number must be a positive number")]
-        public byte TableNumber { get; set; }
+        [Required, Range(1,25)]
+        public byte TableNumber { get; set; } //tinyint in sql
         public bool Smoking { get; set; }
+        [Required]
         public int Capacity { get; set; }
         public bool Available { get; set; }
 
-        //Navigation properties
-        //the reservations table is a many to many relationship
-        //to tables table
-        //The sql ReservationsTable resolves this problem
-        //However ReservationsTable holds only a compound primary key
-        //We will NOT Creat a ReservationsTable entity in our project
-        //  but handle it via navigation mapping
-        //Therefore we will place a Icollection properties in 
-        //  this entity refering to the Reservations table
+        //Navigation Properties
+        // the Reservations table (sql) is a many to many
+        //relationship to the Tables table (sql)
+
+        //Sql solves this problem by having an associate table
+        //that has a compound primary key created from Reservations
+        // and Tables.
+
+        //We will NOT be creating an entity for this associate table.
+        //Instead we will create on overload map in our DbContext class
+
+        //However, we can still create the virtual navigation property to
+        //accomondate this relationship
+
         public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Bill> Bills { get; set; }
+      
 
         public Table()
         {
             Available = true;
+            Smoking = false;
         }
     }
 }
