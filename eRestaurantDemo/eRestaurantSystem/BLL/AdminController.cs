@@ -21,7 +21,7 @@ namespace eRestaurantSystem.BLL
 
         #region Queries
 
-        [DataObjectMethod(DataObjectMethodType.Select,false)]
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
         public List<SpecialEvent> SpecialEvents_List()
         {
             //connect to our DbContext class in the DAL
@@ -81,7 +81,7 @@ namespace eRestaurantSystem.BLL
             }
         }
 
-    [DataObjectMethod(DataObjectMethodType.Select,false)]
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
         public List<ReservationsByDate> GetReservationsByDate(string reservationdate)
         {
             using (var context = new eRestaurantContext())
@@ -119,17 +119,17 @@ namespace eRestaurantSystem.BLL
         }
 
         [DataObjectMethod(DataObjectMethodType.Select, false)]
-    public List<eRestaurantSystem.DAL.DTOs.MenuCategoryItems> MenuCategoryItems_List()
+        public List<eRestaurantSystem.DAL.DTOs.MenuCategoryItems> MenuCategoryItems_List()
         {
             using (var context = new eRestaurantContext())
             {
                 var results = from menuitem in context.MenuCategories
                               orderby menuitem.Description
-                              select new MenuCategoryItems() 
+                              select new MenuCategoryItems()
                               {
                                   Description = menuitem.Description,
                                   MenuItems = from row in menuitem.MenuItems
-                                              select new MenuItem() 
+                                              select new MenuItem()
                                                  {
                                                      Description = row.Description,
                                                      Price = row.CurrentPrice,
@@ -186,7 +186,7 @@ namespace eRestaurantSystem.BLL
         #endregion
 
         #region Add, Update, Delete of CRUD for CQRS
-        [DataObjectMethod(DataObjectMethodType.Insert,false)]
+        [DataObjectMethod(DataObjectMethodType.Insert, false)]
         public void SpecialEvents_Add(SpecialEvent item)
         {
             using (eRestaurantContext context = new eRestaurantContext())
@@ -200,7 +200,7 @@ namespace eRestaurantSystem.BLL
                 context.SaveChanges();
             }
         }
-         [DataObjectMethod(DataObjectMethodType.Update, false)]
+        [DataObjectMethod(DataObjectMethodType.Update, false)]
         public void SpecialEvents_Update(SpecialEvent item)
         {
             using (eRestaurantContext context = new eRestaurantContext())
@@ -213,12 +213,12 @@ namespace eRestaurantSystem.BLL
                 context.SaveChanges();
             }
         }
-         [DataObjectMethod(DataObjectMethodType.Delete, false)]
+        [DataObjectMethod(DataObjectMethodType.Delete, false)]
         public void SpecialEvents_Delete(SpecialEvent item)
         {
             using (eRestaurantContext context = new eRestaurantContext())
             {
-                
+
                 //lookup the instance and record if found (set pointer to instance)
                 SpecialEvent existing = context.SpecialEvents.Find(item.EventCode);
 
@@ -229,63 +229,113 @@ namespace eRestaurantSystem.BLL
             }
         }
 
-         [DataObjectMethod(DataObjectMethodType.Insert, false)]
-         public int Waiters_Add(Waiter item)
-         {
-             using (eRestaurantContext context = new eRestaurantContext())
-             {
-                 //these methods are execute using an instance level item
-                 //set up a instance pointer and initialize to null
-                 Waiter added = null;
-                 //setup the command to execute the add
-                 added = context.Waiters.Add(item);
-                 //command is not executed until it is actually saved.
-                 context.SaveChanges();
-                 //added contains the data of the newly added waiter 
-                 //including the pkey value.
-                 return added.WaiterID;
-             }
-         }
-         [DataObjectMethod(DataObjectMethodType.Update, false)]
-         public void Waiters_Update(Waiter item)
-         {
-             using (eRestaurantContext context = new eRestaurantContext())
-             {
-                 //indicate the updating item instance
-                 //alter the Modified Status flag for this instanc
-                 context.Entry<Waiter>(context.Waiters.Attach(item)).State =
-                     System.Data.Entity.EntityState.Modified;
-                 //command is not executed until it is actually saved.
-                 context.SaveChanges();
-             }
-         }
-         [DataObjectMethod(DataObjectMethodType.Delete, false)]
-         public void Waiters_Delete(Waiter item)
-         {
-             using (eRestaurantContext context = new eRestaurantContext())
-             {
+        [DataObjectMethod(DataObjectMethodType.Insert, false)]
+        public int Waiters_Add(Waiter item)
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                //these methods are execute using an instance level item
+                //set up a instance pointer and initialize to null
+                Waiter added = null;
+                //setup the command to execute the add
+                added = context.Waiters.Add(item);
+                //command is not executed until it is actually saved.
+                context.SaveChanges();
+                //added contains the data of the newly added waiter 
+                //including the pkey value.
+                return added.WaiterID;
+            }
+        }
+        [DataObjectMethod(DataObjectMethodType.Update, false)]
+        public void Waiters_Update(Waiter item)
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                //indicate the updating item instance
+                //alter the Modified Status flag for this instanc
+                context.Entry<Waiter>(context.Waiters.Attach(item)).State =
+                    System.Data.Entity.EntityState.Modified;
+                //command is not executed until it is actually saved.
+                context.SaveChanges();
+            }
+        }
+        [DataObjectMethod(DataObjectMethodType.Delete, false)]
+        public void Waiters_Delete(Waiter item)
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
 
-                 //lookup the instance and record if found (set pointer to instance)
-                 Waiter existing = context.Waiters.Find(item.WaiterID);
+                //lookup the instance and record if found (set pointer to instance)
+                Waiter existing = context.Waiters.Find(item.WaiterID);
 
-                 //setup the command to execute the delete
-                 context.Waiters.Remove(existing);
-                 //command is not executed until it is actually saved.
-                 context.SaveChanges();
-             }
-         }
+                //setup the command to execute the delete
+                context.Waiters.Remove(existing);
+                //command is not executed until it is actually saved.
+                context.SaveChanges();
+            }
+        }
         #endregion
 
         #region Front Desk
-         [DataObjectMethod(DataObjectMethodType.Select)]
-         public DateTime GetLastBillDateTime()
-         {
-             using (eRestaurantContext context = new eRestaurantContext())
-             {
-                 var result = context.Bills.Max(x => x.BillDate);
-                 return result;
-             }
-         }
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public DateTime GetLastBillDateTime()
+        {
+            using (eRestaurantContext context = new eRestaurantContext())
+            {
+                var result = context.Bills.Max(x => x.BillDate);
+                return result;
+            }
+        }
+
+
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public List<ReservationCollection> ReservationsByTime(DateTime date)
+        {
+            using (var context = new eRestaurantContext())
+            {
+                var result = (from data in context.Reservations
+                              where data.ReservationDate.Year == date.Year
+                              && data.ReservationDate.Month == date.Month
+                              && data.ReservationDate.Day == date.Day
+                                  // && data.ReservationDate.Hour == timeSlot.Hours
+                              && data.ReservationStatus == Reservation.Booked
+                              select new ReservationSummary()
+                              {
+                                  ID = data.ReservationID,
+                                  Name = data.CustomerName,
+                                  Date = data.ReservationDate,
+                                  NumberInParty = data.NumberInParty,
+                                  Status = data.ReservationStatus,
+                                  Event = data.Event.Description,
+                                  Contact = data.ContactPhone
+                              }).ToList();
+                //The second part of this method uses the results of the 
+                //first linq query.
+                //Linq to Entity will only execute the query when it deems
+                //necessary for having the result in memory.
+                //
+                //To get your query to execute and have the resulting data
+                //inside memory for further use, you can attach the .ToList()
+                //to the previous query.
+
+                //Note: the second query is NOT using an Entity
+                //it is using the results from a previous 
+
+                //itemGroup is a temporary in memory data collection
+                //this collection can be used in selecting your final 
+                //data collect.
+                var finalResult = from item in result
+                                  orderby item.NumberInParty
+                                  group item by item.Date.Hour into itemGroup
+                                  select new ReservationCollection()
+                                  {
+                                      Hour = itemGroup.Key,
+                                      Reservations = itemGroup.ToList()
+                                  };
+                return finalResult.OrderBy(x => x.Hour).ToList();
+            }
+        }
+
         #endregion
     }//eof class
 }//eof namespace
