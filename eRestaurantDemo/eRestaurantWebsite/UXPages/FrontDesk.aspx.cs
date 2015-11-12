@@ -23,11 +23,7 @@ public partial class UXPages_FrontDesk : System.Web.UI.Page
         AdminController sysmgr = new AdminController();
         DateTime info = sysmgr.GetLastBillDateTime();
         SearchDate.Text = info.ToString("yyyy-MM-dd");
-<<<<<<< HEAD
         SearchTime.Text = info.ToString("HH:mm");
 
-=======
-        SearchTime.Text = info.ToString("hh:mm:ss");
->>>>>>> origin/master
     }
 }

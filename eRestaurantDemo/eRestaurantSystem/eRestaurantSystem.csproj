@@ -49,7 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\AdminController.cs" />
-    <Compile Include="BLL\SeatingController.cs" />
     <Compile Include="BusinessRuleException.cs" />
     <Compile Include="DAL\DTOs\MenuCategoryItems.cs" />
     <Compile Include="DAL\DTOs\ReservationCollection.cs" />
@@ -65,13 +64,9 @@
     <Compile Include="DAL\eRestaurantContext.cs" />
     <Compile Include="DAL\POCOs\CategoryMenuItems.cs" />
     <Compile Include="DAL\POCOs\MenuItem.cs" />
-    <Compile Include="DAL\DTOs\ReservationCollection.cs" />
     <Compile Include="DAL\POCOs\ReservationDetail.cs" />
     <Compile Include="DAL\POCOs\ReservationSummary.cs" />
-<<<<<<< HEAD
     <Compile Include="DAL\POCOs\SeatingSummary.cs" />
-=======
->>>>>>> origin/master
     <Compile Include="DAL\POCOs\WaiterBilling.cs" />
     <Compile Include="DAL\POCOs\WaiterOnDuty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

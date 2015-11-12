@@ -13,20 +13,13 @@ namespace eRestaurantSystem.DAL.Entities
 {
     public class Reservation
     {
-<<<<<<< HEAD
         //constant strings for code readibility
-=======
-        //constant strings for code readibility 
->>>>>>> origin/master
         public const string Booked = "B";
         public const string Arrived = "A";
         public const string Complete = "C";
         public const string NoShow = "N";
         public const string Cancelled = "X";
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
         [Key]
         public int ReservationID { get; set; }
         [Required]
