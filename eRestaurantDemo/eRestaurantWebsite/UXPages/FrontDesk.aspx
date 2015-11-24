@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="FrontDesk.aspx.cs" Inherits="UXPages_FrontDesk" %>
 
+<%@ Register Src="~/UserControls/MessageUserControl.ascx" TagPrefix="uc1" TagName="MessageUserControl" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
      <div class="well">
         <div class="pull-right col-md-5">
@@ -8,7 +11,8 @@
                 <asp:Repeater ID="AdHocBillDateRepeater" runat="server" 
                     DataSourceID="AdHocBillDateDataSource" 
                     ItemType="System.DateTime">
-                    <itemtemplate><b class="label label-primary"><%# Item.ToShortDateString() %></b> &ndash; <b class="label label-info"><%# Item.ToShortTimeString() %></b></itemtemplate>
+                    <itemtemplate><b class="label label-primary"><%# Item.ToShortDateString() %></b> &ndash; 
+                        <b class="label label-info"><%# Item.ToShortTimeString() %></b></itemtemplate>
                 </asp:Repeater>
             </h4>
             <asp:ObjectDataSource runat="server" ID="AdHocBillDateDataSource"
@@ -40,6 +44,8 @@
 
     <!-- this is the presentation markup code for the
         seating summary display-->
+    <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
+
     <div class="col-md-7">
         <details open>
             <summary>Tables</summary>
@@ -57,7 +63,8 @@
             <asp:GridView ID="SeatingGridView" runat="server" AutoGenerateColumns="False"
                     CssClass="table table-hover table-striped table-condensed"
                     DataSourceID="SeatingObjectDataSource" 
-                    ItemType="eRestaurantSystem.DAL.POCOs.SeatingSummary">
+                    ItemType="eRestaurantSystem.DAL.POCOs.SeatingSummary" 
+                OnSelectedIndexChanging="SeatingGridView_SelectedIndexChanging">
                 <Columns>
                     <asp:CheckBoxField DataField="Taken" HeaderText="Taken" 
                         SortExpression="Taken" ItemStyle-HorizontalAlign="Center">
@@ -71,14 +78,15 @@
                     </asp:TemplateField>
                     <asp:BoundField DataField="Seating" HeaderText="Seating" 
                         SortExpression="Seating" ItemStyle-HorizontalAlign="Center"></asp:BoundField>
+                    <%-- CssClass="form-control col-md-1"--%>
                     <asp:TemplateField HeaderText="Reservation Notes / Seat Walk-In">
                         <ItemTemplate>
                             <asp:Panel ID="WalkInSeatingPanel" runat="server" 
                                 CssClass="input-group input-group-sm"
                                     Visible='<%# !Item.Taken %>'>
                                 <asp:TextBox ID="NumberInParty" runat="server" 
-                                    CssClass="form-control col-md-1"
-                                        TextMode="Number" placeholder="# people">
+                                   
+                                        TextMode="Number" placeholder="# people" Width="75">
                                 </asp:TextBox>
                                 <span class="input-group-addon">
                                     <asp:DropDownList ID="WaiterList" runat="server"
