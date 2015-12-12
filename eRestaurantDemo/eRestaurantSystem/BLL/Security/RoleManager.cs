@@ -1,4 +1,5 @@
-﻿using eRestaurantSystem.DAL.Security;
+﻿using eRestaurantSystem.DAL.Entities.Security;
+using eRestaurantSystem.DAL.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eRestaurantSystem.DAL.Entities.Security
+namespace eRestaurantSystem.BLL.Security
 {
     public class RoleManager : RoleManager<IdentityRole>
     {

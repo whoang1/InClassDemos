@@ -1,24 +1,18 @@
-﻿using System;
+﻿using eRestaurantSystem.DAL;
+using eRestaurantSystem.DAL.Entities.Security;
+using eRestaurantSystem.DAL.Security;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#region Extra namespaces
-using eRestaurantSystem.DAL.Security;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-#endregion
-
-namespace eRestaurantSystem.DAL.Entities.Security
+namespace eRestaurantSystem.BLL.Security
 {
     public class UserManager : UserManager<ApplicationUser>
     {
-        public UserManager()
-            : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
-        {
-        }
-
         #region Constants
         private const string STR_DEFAULT_PASSWORD = "Pa$$word1";
         /// <summary>Requires FirstName and LastName</summary>
@@ -28,6 +22,10 @@ namespace eRestaurantSystem.DAL.Entities.Security
         private const string STR_WEBMASTER_USERNAME = "Webmaster";
         #endregion
 
+        public UserManager()
+            : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
+        {
+        }
         public void AddDefaultUsers()
         {
             using (var context = new eRestaurantContext())
@@ -64,5 +62,6 @@ namespace eRestaurantSystem.DAL.Entities.Security
                 }
             }
         }
+
     }
 }

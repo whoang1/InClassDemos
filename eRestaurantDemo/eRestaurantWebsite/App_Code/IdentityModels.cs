@@ -4,14 +4,14 @@ using Microsoft.Owin.Security;
 using System.Web;
 using System;
 using eRestaurantWebsite;
+using eRestaurantSystem.BLL.Security;
 using eRestaurantSystem.DAL.Entities.Security;
 
 namespace eRestaurantWebsite
 {
-    // You can add User data for the user by adding more properties to your User class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
    
 
-  
+
 
     #region Helpers
   

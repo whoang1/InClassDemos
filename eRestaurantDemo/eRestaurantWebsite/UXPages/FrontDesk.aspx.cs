@@ -18,14 +18,7 @@ public partial class UXPages_FrontDesk : System.Web.UI.Page
     {
 
     }
-    protected void MockLastBillingDateTime_Click(object sender, EventArgs e)
-    {
-        AdminController sysmgr = new AdminController();
-        DateTime info = sysmgr.GetLastBillDateTime();
-        SearchDate.Text = info.ToString("yyyy-MM-dd");
-        SearchTime.Text = info.ToString("HH:mm");
 
-    }
     protected void SeatingGridView_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
     {
         //extract tablenumber, waiterid, numberinparty from the gridview
@@ -48,7 +41,7 @@ public partial class UXPages_FrontDesk : System.Web.UI.Page
                 string tablenumber = (agvrow.FindControl("TableNumber") as Label).Text;
                 string numberinparty = (agvrow.FindControl("NumberInParty") as TextBox).Text;
                 string waiterid = (agvrow.FindControl("WaiterList") as DropDownList).SelectedValue;
-                DateTime when = DateTime.Parse(SearchDate.Text).Add(TimeSpan.Parse(SearchTime.Text));
+                DateTime when = Mocker.MockDate.Add(Mocker.MockTime);
 
                 //standard typical call to your controller in the BLL
                 AdminController sysmgr = new AdminController();
@@ -61,18 +54,47 @@ public partial class UXPages_FrontDesk : System.Web.UI.Page
             },"Customer Seated","New walk-in customer has been saved");
 
 
+    }
 
 
+    protected void ReservationSummaryListView_ItemCommand(object sender, ListViewCommandEventArgs e)
+    {
+        // Check the command name and add the reservation for the specified seats.
+        if (e.CommandName.Equals("Seat"))
+        {
+            MessageUserControl.TryRun(() =>
+            {
+                // Get the data
+                var reservationId = int.Parse(e.CommandArgument.ToString());
+                var selectedItems = new List<byte>();
+                foreach (ListItem item in ReservationTableListBox.Items)
+                {
+                    if (item.Selected)
+                        selectedItems.Add(byte.Parse(item.Text.Replace("Table ", "")));
+                }
+                var when = Mocker.MockDate.Add(Mocker.MockTime);
+                // Seat the reservation customer
+                var controller = new AdminController();
+                controller.SeatCustomer(when, reservationId, selectedItems, 
+                    int.Parse(WaiterDropDownList.SelectedValue));
+                // Refresh the gridview
+                SeatingGridView.DataBind();
+				ReservationsRepeater.DataBind();
+                ReservationTableListBox.DataBind();
+            }, "Customer Seated", "Reservation customer has arrived and has been seated");
+        }
 
+    }
+     
+    protected bool ShowReservationSeating()
+    {
+        bool showreservations = false;
+        //this methods will query the database to 
+        //show any available seats for reservations
+        DateTime when = Mocker.MockDate.Add(Mocker.MockTime);
+        AdminController sysmgr = new AdminController();
+        showreservations = sysmgr.IsAvailableSeats(Mocker.MockDate, Mocker.MockTime);
 
-
-
-
-
-
-
-
-
-
+        return showreservations;
     }
 }
